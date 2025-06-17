@@ -13,9 +13,11 @@
 1. Download .exe from Realeses
 2. Download GitHub CLI
 3. Login in GitHub CLI
-4. Run RepoGenerator.exe
 
 ---
+
+> [!IMPORTANT]
+>  Always run RepoGenerator.exe in cmd.
 
 ## ⌨️ Usage
 
@@ -79,7 +81,7 @@ cd %BASEDIR%
 RD /S /Q PCRNDGGYJc
 ```
 
-P.S: "PCRNDGGYJc" and "QoYVntuyMX" is randomly generated names
+P.S: "PCRNDGGYJc" and "QoYVntuyMX" are randomly generated names
 
 ### For people who don't know Batchfile:
 
