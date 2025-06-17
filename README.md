@@ -1,3 +1,8 @@
+![Go](https://img.shields.io/badge/Go-%2300ADD8?logo=Go&logoColor=%23FFFFFF)
+![License](https://img.shields.io/github/license/HardCodeDev777/Repo-Generator?color=%2305991d)
+![Last commit](https://img.shields.io/github/last-commit/HardCodeDev777/Repo-Generator?color=%2305991d)
+![Top lang](https://img.shields.io/github/languages/top/HardCodeDev777/Repo-Generator)
+
 # 💻 Repo Generator
 
 ---
