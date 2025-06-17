@@ -79,7 +79,7 @@ cd %BASEDIR%
 RD /S /Q PCRNDGGYJc
 ```
 
-P.S: "PCRNDGGYJc" and "QoYVntuyMX" is randomly generated names
+P.S: "PCRNDGGYJc" and "QoYVntuyMX" are randomly generated names
 
 ### For people who don't know Batchfile:
 
