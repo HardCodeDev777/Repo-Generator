@@ -1,95 +1,54 @@
 package main
 
 import (
-	"bufio"
+	"flag"
 	"fmt"
 	"math/rand"
 	"os"
 	"os/exec"
-	"strconv"
-	"strings"
 	"time"
 )
 
 const (
+	// 0
 	CSharp = iota
+	// 1
 	CPP
+	// 2
 	Go
+	// 3
 	Java
+	// 4
 	JavaScript
+	// 5
 	C
+	// 6
 	TypeScript
+	// 7
 	Swift
+	// 8
 	Python
+	// 9
 	Dart
+	// 10
 	Rust
 )
 
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
+	repoAmount := flag.Int("c", 2, "Amount of repositories to create")
 
-	// Amount of repos
-	repo_amount := get_amount_of_repos(reader)
+	langRepo := flag.Int("lang", 2, "Language for repositories(see github doc for indexes - https://github.com/HardCodeDev777/Repo-Generator)")
 
-	// Lang
-	lang_repo := get_lang_for_repo(reader)
-
+	flag.Parse()
 	// .bat
-	make_batch(lang_repo, repo_amount)
+	makeBatch(*langRepo, *repoAmount)
 
-	run_batch()
+	runBatch()
 }
 
-func get_amount_of_repos(reader *bufio.Reader) int {
-	fmt.Println("How many repositories you want to create?: ")
-
-	count, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading amount of repositories! :", err)
-	}
-
-	count = strings.TrimSpace(count)
-	count_int, err := strconv.Atoi(count)
-
-	if err != nil {
-		fmt.Println("Error converting string to int in repositories count! :", err)
-	}
-
-	return count_int
-}
-
-func get_lang_for_repo(reader *bufio.Reader) int {
-	fmt.Println("Which PL you want to display in repositories?: ")
-	fmt.Println("0. C#")
-	fmt.Println("1. С++")
-	fmt.Println("2. Go")
-	fmt.Println("3. Java")
-	fmt.Println("4. JavaScript")
-	fmt.Println("5. C")
-	fmt.Println("6. TypeScript")
-	fmt.Println("7. Swift")
-	fmt.Println("8. Python")
-	fmt.Println("9. Dart")
-	fmt.Println("10. Rust")
-
-	lang, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading language! :", err)
-	}
-
-	lang = strings.TrimSpace(lang)
-	lang_int, err := strconv.Atoi(lang)
-
-	if err != nil {
-		fmt.Println("Error converting string to int in getting language! :", err)
-	}
-
-	return lang_int
-}
-
-func make_random_name(lenght int) string {
+func makeRandomName(lenght int) string {
 	rand.Seed(time.Now().UnixNano())
 	result := make([]byte, lenght)
 	for i := range result {
@@ -98,7 +57,7 @@ func make_random_name(lenght int) string {
 	return string(result)
 }
 
-func make_batch(lang_int, amount int) {
+func makeBatch(langInt, amount int) {
 	file, err := os.Create("Generator.bat")
 
 	if err != nil {
@@ -109,15 +68,15 @@ func make_batch(lang_int, amount int) {
 
 	file.WriteString("set BASEDIR=%CD% \n")
 	for i := 0; i < amount; i++ {
-		folder_and_repo_name := make_random_name(10)
-		folder_and_repo_msg := fmt.Sprintf("md %s \n", folder_and_repo_name)
-		file.WriteString(folder_and_repo_msg)
-		go_to_folder_msg := fmt.Sprintf("cd %s \n", folder_and_repo_name)
-		file.WriteString(go_to_folder_msg)
+		folderAndRepoName := makeRandomName(10)
+		folderAndRepoMsg := fmt.Sprintf("md %s \n", folderAndRepoName)
+		file.WriteString(folderAndRepoMsg)
+		goToFolderMsg := fmt.Sprintf("cd %s \n", folderAndRepoName)
+		file.WriteString(goToFolderMsg)
 
 		file.WriteString("git init \n")
 
-		err = make_lang_file(file, lang_int)
+		err = makeLangFile(file, langInt)
 		if err != nil {
 			fmt.Println("Error with language! :", err)
 		}
@@ -125,18 +84,17 @@ func make_batch(lang_int, amount int) {
 		file.WriteString("git add . \n")
 		file.WriteString("git commit -m \"Initial commit\" \n")
 
-		create_clone_msg := fmt.Sprintf("gh repo create %s --private --source=. --remote=origin --push \n", folder_and_repo_name)
-		file.WriteString(create_clone_msg)
+		createCloneMsg := fmt.Sprintf("gh repo create %s --public --source=. --remote=origin --push \n", folderAndRepoName)
+		file.WriteString(createCloneMsg)
 
-		delete_folder_msg := fmt.Sprintf("RD /S /Q %s \n", folder_and_repo_name)
+		deleteFolderMsg := fmt.Sprintf("RD /S /Q %s \n", folderAndRepoName)
 		file.WriteString("cd %BASEDIR% \n")
-		file.WriteString(delete_folder_msg)
-		fmt.Println(".bat file done!")
+		file.WriteString(deleteFolderMsg)
 	}
 }
 
-func make_lang_file(file *os.File, lang_int int) error {
-	switch lang_int {
+func makeLangFile(file *os.File, langInt int) error {
+	switch langInt {
 	case CSharp:
 		file.WriteString("echo using System; > SomeFile.txt \n")
 		file.WriteString("echo public class Program >> SomeFile.txt \n")
@@ -213,7 +171,7 @@ func make_lang_file(file *os.File, lang_int int) error {
 	}
 }
 
-func run_batch() {
+func runBatch() {
 	cmd := exec.Command("cmd.exe", "/K", "Generator.bat")
 
 	err := cmd.Run()
