@@ -37,7 +37,7 @@ const (
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func main() {
-	repoAmount := flag.Int("c", 2, "Amount of repositories to create")
+	repoAmount := flag.Int("c", 0, "Amount of repositories to create")
 
 	langRepo := flag.Int("lang", 2, "Language for repositories(see github doc for indexes - https://github.com/HardCodeDev777/Repo-Generator)")
 
